@@ -16,21 +16,22 @@ server.get("/games", (req, res) => {
     });
 });
 
-server.post("/games", (req, res) => {
+server.post("/games", async (req, res) => {
   const { title, genre } = req.body;
 
-  if (!genre || !title) {
-    res.status(422).json({
-      message: "Missing title or genre."
+  if (!title || !genre) {
+    res.status(422).send({
+      message: "Please enter a title and genre."
     });
     return;
   }
+
   Games.insert(req.body)
-    .then(game => {
-      res.status(201).json(game);
+    .then(req => {
+      res.status(201).send(req);
     })
     .catch(err => {
-      res.status(500).json(err);
+      res.status(500).send(err);
     });
 });
 

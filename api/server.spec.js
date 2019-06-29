@@ -2,6 +2,7 @@ const request = require("supertest");
 
 const server = require("./server.js");
 const db = require("../data/dbConfig.js");
+
 const Games = require("../games/gamesModel.js");
 
 describe("GET /games", () => {
@@ -41,7 +42,7 @@ describe("GET /games", () => {
 });
 
 describe("POST /games", () => {
-  beforeEach(async () => {
+  afterEach(async () => {
     await db("games").truncate();
   });
 
@@ -52,18 +53,54 @@ describe("POST /games", () => {
 
     expect(gamesNumber).toHaveLength(0);
 
-    await Games.insert([{ title: "Pacman", genre: "Arcade" }]);
+    await db("games").insert([{ title: "Pacman", genre: "Arcade" }]);
 
     gamesNumber = await db("games");
 
     expect(gamesNumber).toHaveLength(1);
   });
 
+  // it("should post a new game with status code 201", async () => {
+  //   return request(server)
+  //     .post("/games")
+  //     .then(res => {
+  //       await Games.insert([{ title: "Pacman", genre: "Arcade" }]);
+
+  //       expect(res.status).toBe(201);
+  //     });
+  // });
+
+  //   it("should post a new game with status code 201", async () => {
+  //     const res = await request(server).post("/games");
+
+  //     await Games.insert([{ title: "Dog", genre: "Cat" }]);
+
+  //     expect(res.status).toBe(201);
+  //   });
+
   it("should not post a new game if missing information", async () => {
-    const res = await request(server).post("/games");
+    // const game = [
+    //   {
+    //     title: "Pacman",
+    //     genre: "Game"
+    //   }
+    // ];
+    // db("games").insert(game);
+    // const res = await request(server).post("/games");
 
-    await Games.insert([{ title: "", genre: "" }]);
+    // expect(res.status).toBe(201);
 
-    expect(res.status).toBe(422);
+    const game = [
+      {
+        title: "Title",
+        genre: "Genre"
+      }
+    ];
+    db("games").insert(game);
+    return request(server)
+      .post("/games")
+      .then(res => {
+        expect(res.status).toBe(201);
+      });
   });
 });
