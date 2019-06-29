@@ -12,8 +12,24 @@ describe('GET /games', () => {
             })
     })
 
+    afterEach( async () => {
+        await db('games').truncate();
+      });
+
     it('should hit endpoint', async () => {
         const res = await request(server).get('/games');
         expect(res.body).toEqual([]);
+    })
+
+    it('should return all games in db', async () => {
+        const games = [
+            { id: 1, title: 'Pacman', genre: 'Arcade', releaseYear: 1980},
+            { id: 2, title: 'Super Mario Bros.', genre: 'Platformer', releaseYear: 1985}
+        ];
+
+        await db('games').insert(games);
+
+        const res = await request(server).get('/games');
+        expect(res.body).toEqual(games);
     })
 })
