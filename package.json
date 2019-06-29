@@ -11,6 +11,9 @@
 		"type": "git",
 		"url": "git+https://github.com/LambdaSchool/Sprint-Challenge--Testing.git"
 	},
+	"jest": {
+		"testEnvironment": "node"
+	},
 	"keywords": [],
 	"author": "Lambda School",
 	"license": "ISC",
