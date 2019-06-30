@@ -25,14 +25,13 @@ server.post("/games", async (req, res) => {
     });
     return;
   }
-
-  Games.insert(req.body)
-    .then(req => {
+  try {
+    await Games.insert(req.body).then(req => {
       res.status(201).send(req);
-    })
-    .catch(err => {
-      res.status(500).send(err);
     });
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 module.exports = server;
